@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Battleship
 {
-    // Imagine a game of battleships.
+    //   Imagine a game of battleships.
     //   The player has to guess the location of the opponent's 'ships' on a 10x10 grid
     //   Ships are one unit wide and 2-4 units long, they may be placed vertically or horizontally
     //   The player asks if a given co-ordinate is a hit or a miss

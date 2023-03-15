@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace Battleship
 {
 
+    // PLEASE NOTE: I thought a 'charter' was the name of someone who uses maps, I was wrong. Apologies
+    //                      
+    //
     // SOLID: Single Responsibility class for all coordinate mapping methods
     // 
     // OOP: Abstraction: Abstracts all of the functions required in the Game class, to reduce the complexity in the Play() method.
@@ -17,7 +20,7 @@ namespace Battleship
         /*
          *  This method retrieves all of the coordinates of a ship so that they can be cross checked with the guesses.
          *  
-         *  This also accounts for the edge cases of ships facing a different direction
+         *  This also accounts for the edge cases of ships facing a different direction e.g. '3:7,3:5'
          * 
          */
         public static List<string> getAllShipCoordinates(string shipStartToEnd)
@@ -126,7 +129,6 @@ namespace Battleship
             if (moreThanTwoCoord)
             {
                 string allCoords = sb.ToString();
-                Console.WriteLine(allCoords);
                 string[] newAllCoords = allCoords.Split(',');
 
                 // Small introduction to a Linq function, thanks for asking the Linq question during 1st stage!
