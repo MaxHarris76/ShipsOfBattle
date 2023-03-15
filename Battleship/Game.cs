@@ -13,6 +13,8 @@
 */
 
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace Battleship
 {
@@ -37,17 +39,16 @@ namespace Battleship
         int shipLength;
 
         public static int Play(string[] ships, string[] guesses)
-        {
-            int numOfHits = 0;
+        {    
             int numOfSunkShips = 0;
 
             foreach(string ship in ships)
             {
-                string[] fullShip = getAllShipCoordinates(ship);
-                //int extraLength = getShipLength(fullShip);
+                int numOfHits = 0;
 
                 foreach (string guess in guesses)
                 {
+                    List<string> fullShip = getAllShipCoordinates(ship);
                     Dictionary<string, int> guessXY = DeserializeXY(guess);
 
                     foreach(string shipCoordinate in fullShip)
@@ -57,19 +58,14 @@ namespace Battleship
                         if((guessXY["X"] == shipCoordXY["X"]) && (guessXY["Y"] == shipCoordXY["Y"]))
                         {
                             numOfHits++;
-                            if(numOfHits == fullShip.Length)
+                            if(numOfHits == fullShip.Count)
                             {
                                 numOfSunkShips++;
                             }
-                            //if (numOfHits == (fullShip.Length + extraLength))
-                            //{
-                            //    numOfSunkShips++;
-                            //}
                         }
                     }
                 }
             }
-            Console.WriteLine(numOfSunkShips);
             return numOfSunkShips;
         }
 
@@ -84,110 +80,123 @@ namespace Battleship
             return axisKeyValPair;
         }
 
-        public static string[] getAllShipCoordinates(string shipStartToEnd)
+        public static List<string> getAllShipCoordinates(string shipStartToEnd)
         {
-            string[] allShipCoordinates = shipStartToEnd.Split(',');
+            List<string> allShipCoordinates = shipStartToEnd.Split(',').ToList();
 
             Dictionary<string, int> shipBow = DeserializeXY(allShipCoordinates[0]);
             Dictionary<string, int> shipStern = DeserializeXY(allShipCoordinates[1]);
-
+            StringBuilder sb = new StringBuilder();
             int diff;
+            bool moreThanTwoCoord = false;
+            bool isShipBackwards = false;
 
-            //bool sharedX = false;
-            //bool sharedY = false;
 
-
+            #region Insert missing coordinates into list
             if (shipBow["X"] == shipStern["X"])
             {
-                diff = shipBow["Y"] - shipStern["Y"];
+                int x = shipBow["X"];
+                diff = shipStern["Y"] - shipBow["Y"];
                 if (diff != 0)
                 {
-                    diff += 1;
+                    diff -= 1;
                 }
+
                 if (diff < 0)
                 {
+                    isShipBackwards = true;
                     diff *= -1;
                 }
 
-                string[] newAllShip
+                if (!isShipBackwards)
+                {
+                    int position = 0;
+                    sb.Append(allShipCoordinates[0]);
+                    while (diff > 0)
+                    {
+                        moreThanTwoCoord = true;
+                        sb.AppendLine("," + x.ToString() + ":" + (shipBow["Y"]+position+1).ToString());
+                        position++;
+                        diff -= 1;
+                    }
+                    sb.AppendLine("," + allShipCoordinates[1]);
+                }
+                else
+                {
+                    int position = 0;
+                    sb.Append(allShipCoordinates[1]);
+                    while (diff > 0)
+                    {
+                        moreThanTwoCoord = true;
+                        sb.AppendLine("," + x.ToString() + ":" + (shipBow["Y"] + position + 1).ToString());
+                        position++;
+                        diff -= 1;
+                    }
+                    sb.AppendLine("," + allShipCoordinates[0]);
+                }
+            }
+            else if (shipBow["Y"] == shipStern["Y"])
+            {
+                int y = shipBow["Y"];
+                diff = shipStern["X"] - shipBow["X"];
+
+                if (diff != 0)
+                {
+                    diff -= 1;
+                }
+
+                if (diff < 0)
+                {   
+                    isShipBackwards = true;
+                    diff *= -1;
+                }
+
+                if (!isShipBackwards)
+                {
+                    int position = 0;
+                    sb.Append(allShipCoordinates[0]);
+                    while (diff > 0)
+                    {
+                        moreThanTwoCoord = true;
+                        sb.Append("," + y.ToString() + ":" + (shipBow["X"] + position + 1).ToString());
+                        position++;
+                        diff -= 1;
+                    }
+                    sb.Append("," + allShipCoordinates[1]);
+                }
+                else
+                {
+                    int position = 0;
+                    sb.Append(allShipCoordinates[1]);
+                    while (diff > 0)
+                    {
+                        moreThanTwoCoord = true;
+                        sb.Append("," + y.ToString() + ":" + (shipBow["X"] + position + 1).ToString());
+                        position++;
+                        diff -= 1;
+                    }
+                    sb.Append("," + allShipCoordinates[0]);
+                }
             }
             else
             {
-                diff = shipBow["X"] - shipStern["X"];
-                if (diff != 0)
-                {
-                    diff += 1;
-                }
-                if (diff < 0)
-                {
-                    diff *= -1;
-                }
-
+                // Do nothing.
             }
 
-            return allShipCoordinates;
+            #endregion Insert missing coordinates into list
+
+            if (moreThanTwoCoord)
+            {
+                string allCoords = sb.ToString();
+                Console.WriteLine(allCoords);
+                string[] newAllCoords = allCoords.Split(',');
+                List<string> finalAllCoords = newAllCoords.ToList();
+                return finalAllCoords;
+            }
+            else
+            {
+                return allShipCoordinates;
+            }      
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //public static int getShipLength(string[] fullShip)
-        //{
-
-        //    Dictionary<string, int> shipBow = DeserializeXY(fullShip[0]);
-        //    Dictionary<string, int> shipStern = DeserializeXY(fullShip[1]);
-
-        //    if (shipBow["X"] == shipStern["X"])
-        //    {
-        //        int yDiff = shipBow["Y"] - shipStern["Y"];
-        //        if (yDiff != 0)
-        //        {
-        //            yDiff += 1;
-        //        }
-        //        if (yDiff < 0)
-        //        {
-        //            yDiff*=-1;
-        //        }
-        //        return yDiff;
-        //    }
-        //    else
-        //    {
-        //        int xDiff = shipBow["X"] - shipStern["X"];
-        //        if(xDiff != 0)
-        //        {
-        //            xDiff += 1;
-        //        }
-        //        if (xDiff < 0)
-        //        {
-        //            xDiff *= -1;
-        //        }
-        //        return xDiff;
-        //    }
-        //}
-
-        //public static string[] getAllShipCoordinates(string shipStartToEnd)
-        //{
-        //    string[] allShipCoordinates = shipStartToEnd.Split(',');
-        //    return allShipCoordinates;
-        //}
     }
 }
