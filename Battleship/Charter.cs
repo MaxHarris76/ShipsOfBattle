@@ -48,15 +48,18 @@ namespace Battleship
 
 
             #region Insert missing coordinates into list
+            // While loop added to prevent unneccesary code running if the ship is only 2 coordinates long
             while (diff != 0)
             {
                 if (shipBow["X"] == shipStern["X"])
                 {
                     int x = shipBow["X"];
-                    diff = shipStern["Y"] - shipBow["Y"];
 
+                    #region calculates gap between ships two coordinates
+                    diff = shipStern["Y"] - shipBow["Y"];
                     if (diff < 0)
                     {
+                        // if the diff returns a -ve value then we know the ship is facing the opposite direction
                         isShipBackwards = true;
                         diff *= -1;
                     }
@@ -65,9 +68,11 @@ namespace Battleship
                     {
                         diff -= 1;
                     }
+                    #endregion calculates gap between ships two coordinates
 
                     if (!isShipBackwards)
                     {
+                        // Builds a string that inputs the missing coordinates
                         int position = 0;
                         sb.Append(allShipCoordinates[0]);
                         while (diff > 0)
@@ -93,6 +98,7 @@ namespace Battleship
                         sb.AppendLine("," + allShipCoordinates[0]);
                     }
                 }
+                // same above, as for Y axis ships
                 else if (shipBow["Y"] == shipStern["Y"])
                 {
                     int y = shipBow["Y"];
