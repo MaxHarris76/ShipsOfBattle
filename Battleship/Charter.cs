@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Battleship
 {
 
-    // PLEASE NOTE: I thought a 'charter' was the name of someone who uses maps, I was wrong. Apologies
+    // PLEASE NOTE: I thought a 'charter' was the name of someone who uses maps, I was wrong. Apologies for the poor naming!
     //                      
     //
     // SOLID: Single Responsibility class for all coordinate mapping methods
@@ -16,6 +16,19 @@ namespace Battleship
 
     public class Charter
     {
+
+
+        // Places XY values of a coordinate into key pair values for easy retrieval
+        public static Dictionary<string, int> DeserializeXY(string xy)
+        {
+            Dictionary<string, int> axisKeyValPair = new Dictionary<string, int>();
+            string[] splitXY = xy.Split(':');
+
+            axisKeyValPair.Add("X", Int32.Parse(splitXY[0]));
+            axisKeyValPair.Add("Y", Int32.Parse(splitXY[1]));
+
+            return axisKeyValPair;
+        }
 
         /*
          *  This method retrieves all of the coordinates of a ship so that they can be cross checked with the guesses.
@@ -103,7 +116,8 @@ namespace Battleship
                         while (diff > 0)
                         {
                             moreThanTwoCoord = true;
-                            sb.Append("," + y.ToString() + ":" + (shipBow["X"] + position + 1).ToString());
+                            
+                            sb.Append("," + (shipBow["X"] + position + 1).ToString() + ":" + y.ToString());
                             position++;
                             diff -= 1;
                         }
@@ -116,7 +130,7 @@ namespace Battleship
                         while (diff > 0)
                         {
                             moreThanTwoCoord = true;
-                            sb.Append("," + y.ToString() + ":" + (shipStern["X"] + position + 1).ToString());
+                            sb.Append("," + (shipStern["X"] + position + 1).ToString() + ":" + y.ToString());
                             position++;
                             diff -= 1;
                         }
@@ -139,18 +153,6 @@ namespace Battleship
             {
                 return allShipCoordinates;
             }
-        }
-
-        // Places XY values of a coordinate into key pair values for easy retrieval
-        public static Dictionary<string, int> DeserializeXY(string xy)
-        {
-            Dictionary<string, int> axisKeyValPair = new Dictionary<string, int>();
-            string[] splitXY = xy.Split(':');
-
-            axisKeyValPair.Add("X", Int32.Parse(splitXY[0]));
-            axisKeyValPair.Add("Y", Int32.Parse(splitXY[1]));
-
-            return axisKeyValPair;
         }
     }
 }

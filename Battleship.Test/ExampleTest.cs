@@ -5,6 +5,7 @@ namespace Battleship.Test
 
     public class ExampleTest
     {
+        // No sunken ships
         [Fact]
         public void TestPlay()
         {
@@ -13,6 +14,7 @@ namespace Battleship.Test
             Game.Play(ships, guesses).Should().Be(0);
         }
 
+        // One sunken x axis ship, one missed ship
         [Fact]
         public void TestPlay2()
         {
@@ -21,6 +23,7 @@ namespace Battleship.Test
             Game.Play(ships, guesses).Should().Be(1);
         }
 
+        // 2 sunken x-axis ships
         [Fact]
         public void TestPlay3()
         {
@@ -29,6 +32,7 @@ namespace Battleship.Test
             Game.Play(ships, guesses).Should().Be(2);
         }
 
+        // 2 sunken x-axis ships with extra wrong guesses
         [Fact]
         public void TestPlay4()
         {
@@ -37,6 +41,7 @@ namespace Battleship.Test
             Game.Play(ships, guesses).Should().Be(2);
         }
 
+        // 2 sunken x-axis ships with jumbled guesses
         [Fact]
         public void TestPlay5()
         {
@@ -45,7 +50,7 @@ namespace Battleship.Test
             Game.Play(ships, guesses).Should().Be(2);
         }
 
-
+        // 3 sunken x axis ships
         [Fact]
         public void TestPlay6()
         {
@@ -54,6 +59,7 @@ namespace Battleship.Test
             Game.Play(ships, guesses).Should().Be(3);
         }
 
+        // Y- axis sunken ship
         [Fact]
         public void TestPlay7()
         {
@@ -62,7 +68,10 @@ namespace Battleship.Test
             Game.Play(ships, guesses).Should().Be(1);
         }
 
-        // Backward ship
+
+        // ********** EDGE CASES **********
+
+        // Backward sunken x-axis ship
         [Fact]
         public void TestPlay8()
         {
@@ -72,13 +81,40 @@ namespace Battleship.Test
         }
 
 
-        // Mixture of forward and backward facing ships, 2 sunk ships
+        // Mixture of forward and backward facing x-axis ships, 2 sunk ships
         [Fact]
         public void TestPlay9()
         {
             var ships = new[] { "3:5,3:2", "7:6,7:8", "1:2,1:4" };
             var guesses = new[] { "3:2", "3:3", "3:4", "3:5", "7:6", "7:7","7:8" };
             Game.Play(ships, guesses).Should().Be(2);
+        }
+
+        // Y axis ship
+        [Fact]
+        public void TestPlay10()
+        {
+            var ships = new[] { "5:9,8:9", "1:2,1:4" };
+            var guesses = new[] { "5:9", "6:9", "7:9", "8:9", "7:6", "7:7", "7:8" };
+            Game.Play(ships, guesses).Should().Be(1);
+        }
+
+        // Backwards Y axis ship
+        [Fact]
+        public void TestPlay11()
+        {
+            var ships = new[] { "8:9,5:9", "1:2,1:4" };
+            var guesses = new[] { "5:9", "6:9", "7:9", "8:9", "7:6", "7:7", "7:8" };
+            Game.Play(ships, guesses).Should().Be(1);
+        }
+
+        // Backwards Y axis and X axis ship
+        [Fact]
+        public void TestPlay12()
+        {
+            var ships = new[] { "8:9,5:9", "1:4,1:2" };
+            var guesses = new[] { "5:9", "6:9", "7:9", "8:9", "7:6", "7:7", "7:8" };
+            Game.Play(ships, guesses).Should().Be(1);
         }
     }
 }

@@ -21,9 +21,6 @@ namespace Battleship
 
         string[] ships = new string[] { "3:2,3:5" };
         string[] guesses = new string[] { "7:0", "3:3" };
-        int shipLength;
-
-
 
         /* 
          *   This method gets all of the coordinates of each ship, then checks the coordinates of the ship against the
